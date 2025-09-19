@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     siteName: "Chat2Site",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/placeholder.svg",
         width: 1200,
         height: 630,
         alt: "Chat2Site - Create Websites by Chatting",
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Chat2Site - Create Websites by Chatting with AI",
     description: "Create stunning websites by simply chatting with our AI. No coding required.",
-    images: ["/og-image.jpg"],
+    images: ["/placeholder.svg"],
     creator: "@chat2site",
   },
   robots: {
