@@ -57,6 +57,7 @@ export function Header() {
               <Globe className="w-4 h-4" />
               <span>{language === "ar" ? "EN" : "العربية"}</span>
             </Button>
+            <ThemeToggle />
             <Link href="/generate">
               <Button
                 size="sm"
