@@ -5,6 +5,7 @@ import "./globals.css"
 import { AuthProvider } from "@/hooks/use-auth.tsx"
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider"
+import { TranslationProvider } from "@/hooks/use-translation"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -104,10 +105,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${firaCode.variable} ${notoSansArabic.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <AuthProvider>
-            {children}
-            <Toaster />
-          </AuthProvider>
+          <TranslationProvider>
+            <AuthProvider>
+              {children}
+              <Toaster />
+            </AuthProvider>
+          </TranslationProvider>
         </ThemeProvider>
       </body>
     </html>
