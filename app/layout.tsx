@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter, Fira_Code, Noto_Sans_Arabic } from "next/font/google"
 import "./globals.css"
-import { AuthProvider } from "@/hooks/use-auth"
+import { AuthProvider } from "@/hooks/use-auth.tsx"
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider"
 
