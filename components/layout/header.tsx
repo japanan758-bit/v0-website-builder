@@ -5,12 +5,11 @@ import Link from "next/link"
 import { Menu, X, Sparkles, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTranslation } from "@/hooks/use-translation"
-import { useStore } from "@/lib/store"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { t } = useTranslation()
-  const { language, setLanguage } = useStore()
+  const { t, language, setLanguage } = useTranslation()
 
   const toggleLanguage = () => {
     setLanguage(language === "ar" ? "en" : "ar")
@@ -58,6 +57,7 @@ export function Header() {
               <Globe className="w-4 h-4" />
               <span>{language === "ar" ? "EN" : "العربية"}</span>
             </Button>
+            <ThemeToggle />
             <Link href="/generate">
               <Button
                 size="sm"

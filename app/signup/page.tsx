@@ -30,7 +30,7 @@ import { Badge } from "@/components/ui/badge"
 import { useAuth } from "@/hooks/use-auth"
 import { useTranslation } from "@/hooks/use-translation"
 import { languages } from "@/lib/i18n"
-import { supabase } from "@/lib/supabase/client"
+import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/client"
 
 const plans = [
   {
@@ -179,6 +179,15 @@ export default function SignupPage() {
   const handleSocialSignup = async (provider: "google" | "github") => {
     try {
       setIsLoading(true)
+      if (!isSupabaseConfigured) {
+        setError(language === "ar" ? "المصادقة غير مُهيأة" : "Authentication is not configured")
+        return
+      }
+      const supabase = getSupabaseClient()
+      if (!supabase) {
+        setError(language === "ar" ? "المصادقة غير مُهيأة" : "Authentication is not configured")
+        return
+      }
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {

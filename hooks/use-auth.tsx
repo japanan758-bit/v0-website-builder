@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useContext, createContext, type ReactNode } from "react"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
-import { supabase } from "@/lib/supabase/client"
+import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/client"
 import type { User, AuthState, LoginCredentials, RegisterCredentials } from "@/lib/auth/types"
 
 interface AuthContextType extends AuthState {
@@ -24,8 +24,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     error: null,
   })
 
+  const supabase = getSupabaseClient()
+
   const fetchUserProfile = async (supabaseUser: SupabaseUser): Promise<User | null> => {
     try {
+      if (!supabase) return null
+
       const { data, error } = await supabase.from("users").select("*").eq("id", supabaseUser.id).single()
 
       if (error) {
@@ -60,6 +64,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (credentials: LoginCredentials) => {
     try {
+      if (!isSupabaseConfigured || !supabase) {
+        return { success: false, error: "Authentication is not configured" }
+      }
+
       setState((prev) => ({ ...prev, loading: true, error: null }))
 
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -87,6 +95,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (credentials: RegisterCredentials) => {
     try {
+      if (!isSupabaseConfigured || !supabase) {
+        return { success: false, error: "Authentication is not configured" }
+      }
+
       setState((prev) => ({ ...prev, loading: true, error: null }))
 
       const { data, error } = await supabase.auth.signUp({
@@ -106,7 +118,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (data.user) {
-        // Create user profile in database
         const { error: profileError } = await supabase.from("users").insert({
           id: data.user.id,
           email: credentials.email,
@@ -142,6 +153,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
+      if (!isSupabaseConfigured || !supabase) {
+        setState({ user: null, loading: false, error: null })
+        return
+      }
       setState((prev) => ({ ...prev, loading: true }))
       await supabase.auth.signOut()
       setState({ user: null, loading: false, error: null })
@@ -153,6 +168,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPassword = async (email: string) => {
     try {
+      if (!isSupabaseConfigured || !supabase) {
+        return { success: false, error: "Authentication is not configured" }
+      }
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
       })
@@ -170,6 +188,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const updatePassword = async (password: string) => {
     try {
+      if (!isSupabaseConfigured || !supabase) {
+        return { success: false, error: "Authentication is not configured" }
+      }
       const { error } = await supabase.auth.updateUser({
         password: password,
       })
@@ -187,6 +208,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const updateProfile = async (data: Partial<User>) => {
     try {
+      if (!isSupabaseConfigured || !supabase) {
+        return { success: false, error: "Authentication is not configured" }
+      }
       if (!state.user) {
         return { success: false, error: "المستخدم غير مسجل الدخول" }
       }
@@ -205,7 +229,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: false, error: error.message }
       }
 
-      // Update local state
       setState((prev) => ({
         ...prev,
         user: prev.user ? { ...prev.user, ...data } : null,
@@ -220,6 +243,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshUser = async () => {
     try {
+      if (!isSupabaseConfigured || !supabase) {
+        setState((prev) => ({ ...prev, user: null }))
+        return
+      }
       const {
         data: { user },
       } = await supabase.auth.getUser()
@@ -236,7 +263,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    // Get initial session
+    if (!isSupabaseConfigured || !supabase) {
+      setState({ user: null, loading: false, error: null })
+      return
+    }
+
     const getInitialSession = async () => {
       try {
         const {
@@ -257,7 +288,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     getInitialSession()
 
-    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {

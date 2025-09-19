@@ -2,9 +2,10 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter, Fira_Code, Noto_Sans_Arabic } from "next/font/google"
 import "./globals.css"
-import { AuthProvider } from "@/hooks/use-auth"
+import { AuthProvider } from "@/hooks/use-auth.tsx"
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider"
+import { TranslationProvider } from "@/hooks/use-translation"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -63,7 +64,7 @@ export const metadata: Metadata = {
     siteName: "Chat2Site",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/placeholder.svg",
         width: 1200,
         height: 630,
         alt: "Chat2Site - Create Websites by Chatting",
@@ -74,7 +75,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Chat2Site - Create Websites by Chatting with AI",
     description: "Create stunning websites by simply chatting with our AI. No coding required.",
-    images: ["/og-image.jpg"],
+    images: ["/placeholder.svg"],
     creator: "@chat2site",
   },
   robots: {
@@ -104,10 +105,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${firaCode.variable} ${notoSansArabic.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <AuthProvider>
-            {children}
-            <Toaster />
-          </AuthProvider>
+          <TranslationProvider>
+            <AuthProvider>
+              {children}
+              <Toaster />
+            </AuthProvider>
+          </TranslationProvider>
         </ThemeProvider>
       </body>
     </html>

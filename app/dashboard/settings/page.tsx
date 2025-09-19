@@ -652,18 +652,8 @@ export default function SettingsPage() {
                     {language === "ar" ? "المظهر" : "Theme"}
                   </label>
                   <div className="grid grid-cols-3 gap-3">
-                    <div className="border-2 border-blue-500 rounded-lg p-3 cursor-pointer">
-                      <div className="w-full h-16 bg-white rounded border mb-2"></div>
-                      <div className="text-center text-sm font-medium">{language === "ar" ? "فاتح" : "Light"}</div>
-                    </div>
-                    <div className="border-2 border-gray-200 rounded-lg p-3 cursor-pointer">
-                      <div className="w-full h-16 bg-gray-800 rounded mb-2"></div>
-                      <div className="text-center text-sm font-medium">{language === "ar" ? "داكن" : "Dark"}</div>
-                    </div>
-                    <div className="border-2 border-gray-200 rounded-lg p-3 cursor-pointer">
-                      <div className="w-full h-16 bg-gradient-to-r from-white to-gray-800 rounded mb-2"></div>
-                      <div className="text-center text-sm font-medium">{language === "ar" ? "تلقائي" : "Auto"}</div>
-                    </div>
+                    {/* Theme selectors wired to next-themes */}
+                    <ThemeSelector />
                   </div>
                 </div>
 
