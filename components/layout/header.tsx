@@ -8,8 +8,7 @@ import { useTranslation } from "@/hooks/use-translation"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { t } = useTranslation()
-  const { language, setLanguage } = useStore()
+  const { t, language, setLanguage } = useTranslation()
 
   const toggleLanguage = () => {
     setLanguage(language === "ar" ? "en" : "ar")
