@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/hooks/use-auth"
 import { useTranslation } from "@/hooks/use-translation"
 import { languages } from "@/lib/i18n"
-import { supabase } from "@/lib/supabase/client"
+import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/client"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -84,6 +84,15 @@ export default function LoginPage() {
   const handleSocialLogin = async (provider: "google" | "github") => {
     try {
       setIsLoading(true)
+      if (!isSupabaseConfigured) {
+        setError(language === "ar" ? "المصادقة غير مُهيأة" : "Authentication is not configured")
+        return
+      }
+      const supabase = getSupabaseClient()
+      if (!supabase) {
+        setError(language === "ar" ? "المصادقة غير مُهيأة" : "Authentication is not configured")
+        return
+      }
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
