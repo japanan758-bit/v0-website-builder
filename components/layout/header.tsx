@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Menu, X, Sparkles, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTranslation } from "@/hooks/use-translation"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
